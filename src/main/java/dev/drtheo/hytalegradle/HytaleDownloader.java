@@ -6,17 +6,20 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import org.apache.commons.io.FileUtils;
+import org.gradle.process.ExecOperations;
 
 public class HytaleDownloader {
     
     private final Project project;
     private final Logger logger;
     private final String downloaderUrl;
+    private final ExecOperations exec;
     
-    public HytaleDownloader(Project project, Logger logger, String downloaderUrl) {
+    public HytaleDownloader(Project project, Logger logger, String downloaderUrl, ExecOperations exec) {
         this.project = project;
         this.logger = logger;
         this.downloaderUrl = downloaderUrl;
+        this.exec = exec;
     }
     
     public void download(File hytaleDir, File tmpDir) {
@@ -47,7 +50,7 @@ public class HytaleDownloader {
         }
         
         logger.lifecycle("Running hytale-downloader...");
-        project.exec(exec -> {
+        exec.exec(exec -> {
             exec.workingDir(hytaleDir);
             exec.commandLine(downloader.getAbsolutePath());
         });

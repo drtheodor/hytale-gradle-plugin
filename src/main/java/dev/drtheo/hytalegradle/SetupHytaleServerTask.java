@@ -4,11 +4,17 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.*;
+import org.gradle.process.ExecOperations;
+
+import javax.inject.Inject;
 import java.io.File;
 import java.nio.file.Files;
 
 public abstract class SetupHytaleServerTask extends DefaultTask {
-    
+
+    @Inject
+    protected abstract ExecOperations getExecOperations();
+
     @InputDirectory
     @Optional
     public abstract DirectoryProperty getProjectDir();
@@ -64,11 +70,11 @@ public abstract class SetupHytaleServerTask extends DefaultTask {
     }
     
     private void downloadHytaleServer(File hytaleDir, File tmpDir) {
-        // Fixed: Use the configurable downloaderUrl
         HytaleDownloader downloader = new HytaleDownloader(
-            getProject(), 
-            getLogger(), 
-            getDownloaderUrl().get()  // Pass the URL from extension
+                getProject(),
+                getLogger(),
+                getDownloaderUrl().get(),  // Pass the URL from extension
+                getExecOperations()
         );
         downloader.download(hytaleDir, tmpDir);
     }
