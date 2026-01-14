@@ -1,0 +1,55 @@
+name: Automated Builds
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - src/**
+      - build.gradle
+      - gradle.properties
+      - settings.gradle
+      - gradle/**
+      - gradlew
+      - gradlew.bat
+      - versioning.gradle
+      - .github/workflows/publish.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Setup Amble Maven
+        id: setup-maven
+        uses: drtheodor/static-file-server-actions/upload/setup@main
+        with:
+          repo: drtheodor/maven
+
+      - name: Build for Maven
+        env:
+          CI_MAVEN_PATH: ${{ steps.setup-maven.outputs.path }}
+        run: ./gradlew publishMavenJavaPublicationToCiRepository
+
+      - name: Publish to Amble Maven
+        uses: drtheodor/static-file-server-actions/upload@main
+        with:
+          published: dev/drtheo/hytalegradle
+          token: ${{ secrets.BOT_TOKEN }}
+          message: "chore: publish hytale-gradle artifacts"
