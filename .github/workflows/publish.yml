@@ -33,9 +33,6 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Build
-        run: ./gradlew build
-
       - name: Setup Amble Maven
         id: setup-maven
         uses: drtheodor/static-file-server-actions/upload/setup@main
