@@ -47,6 +47,6 @@ jobs:
       - name: Publish to Amble Maven
         uses: drtheodor/static-file-server-actions/upload@main
         with:
-          published: dev/drtheo/hytalegradle
+          published: dev/drtheo/hytale-gradle
           token: ${{ secrets.BOT_TOKEN }}
           message: "chore: publish hytale-gradle artifacts"
