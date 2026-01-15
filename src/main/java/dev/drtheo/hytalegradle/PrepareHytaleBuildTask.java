@@ -29,16 +29,14 @@ public abstract class PrepareHytaleBuildTask extends DefaultTask {
             modsDir.mkdirs();
         }
 
-        File targetJar = new File(modsDir, "dev.jar");
-
         getFileSystemOperations().copy(copySpec -> {
             copySpec.from(inputJar);
             copySpec.into(modsDir);
             copySpec.rename(oldName -> "dev.jar");
         });
 
-        getLogger().lifecycle("Copied {} to {}",
+        getLogger().lifecycle("Copied {} to {}/dev.jar",
                 inputJar.getName(),
-                targetJar.getAbsolutePath());
+                modsDir.getAbsolutePath());
     }
 }

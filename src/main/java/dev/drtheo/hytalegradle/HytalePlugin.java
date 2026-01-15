@@ -3,6 +3,7 @@ package dev.drtheo.hytalegradle;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.bundling.Jar;
 
 public class HytalePlugin implements Plugin<Project> {
     
@@ -31,12 +32,10 @@ public class HytalePlugin implements Plugin<Project> {
             task.setDescription("Prepares mod for Hytale server");
             task.getModsDir().set(extension.getModsDir());
 
-            project.getTasks().named("jar", jarTask -> {
-                jarTask.getOutputs().getFiles().forEach(file -> {
-                    if (file.getName().endsWith(".jar")) {
-                        task.getInputJar().set(file);
-                    }
-                });
+            project.getTasks().withType(Jar.class).configureEach(jarTask -> {
+                if (jarTask.getName().equals("jar")) {
+                    task.getInputJar().set(jarTask.getArchiveFile());
+                }
             });
 
             task.dependsOn("build");
