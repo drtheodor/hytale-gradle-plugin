@@ -25,8 +25,9 @@ public abstract class RunHytaleServerTask extends DefaultTask {
 
         getExecOperations().javaexec(spec -> {
             spec.setWorkingDir(runDir);
-            spec.setExecutable("java");
-            spec.args("-jar", 
+            spec.getMainClass().set("-jar");
+//            spec.setExecutable("java");
+            spec.args(
                 serverJar.getAbsolutePath(), 
                 "--assets", assetsZip.getAbsolutePath(), 
                 "--disable-sentry"
