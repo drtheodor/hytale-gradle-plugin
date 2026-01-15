@@ -17,7 +17,6 @@ public class HytalePlugin implements Plugin<Project> {
     }
     
     private void registerTasks(Project project, HytalePluginExtension extension) {
-        // Fixed: Pass downloaderUrl to the task
         project.getTasks().register("setupHytaleServer", SetupHytaleServerTask.class, task -> {
             task.setGroup("Hytale");
             task.setDescription("Ensures HytaleServer.jar and Assets.zip are available");
@@ -26,13 +25,21 @@ public class HytalePlugin implements Plugin<Project> {
             task.getBuildDir().set(project.getLayout().getBuildDirectory());
             task.getDownloaderUrl().set(extension.getDownloaderUrl());
         });
-        
-        // Missing PrepareHytaleBuildTask implementation
+
         project.getTasks().register("prepareHytaleBuild", PrepareHytaleBuildTask.class, task -> {
             task.setGroup("Hytale");
             task.setDescription("Prepares mod for Hytale server");
             task.getModsDir().set(extension.getModsDir());
-            task.dependsOn("jar");
+
+            project.getTasks().named("jar", jarTask -> {
+                jarTask.getOutputs().getFiles().forEach(file -> {
+                    if (file.getName().endsWith(".jar")) {
+                        task.getInputJar().set(file);
+                    }
+                });
+            });
+
+            task.dependsOn("build");
         });
         
         project.getTasks().register("runHytaleServer", RunHytaleServerTask.class, task -> {
