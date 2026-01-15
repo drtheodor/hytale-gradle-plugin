@@ -27,7 +27,7 @@ public class HytalePlugin implements Plugin<Project> {
         ConfigurationContainer configurations = project.getConfigurations();
 
         // Create the configuration that users can reference
-        Configuration hytaleConfig = configurations.create("hytale");
+        Configuration hytaleConfig = configurations.create("hytaleServer");
         hytaleConfig.setDescription("Hytale Server dependency");
         hytaleConfig.setVisible(true);
         hytaleConfig.setCanBeResolved(false); // Not meant to be resolved directly
