@@ -1,11 +1,9 @@
 package dev.drtheo.hytalegradle;
 
 import org.gradle.api.Project;
-import org.gradle.api.file.Directory;
 import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.provider.Property;
-import org.gradle.api.provider.Provider;
-import java.io.File;
 
 public class HytalePluginExtension {
     
@@ -13,7 +11,9 @@ public class HytalePluginExtension {
     private final DirectoryProperty modsDir;
     private final DirectoryProperty runDir;
     private final Property<String> downloaderUrl;
-    
+
+    private final FileCollection serverJar;
+
     public HytalePluginExtension(Project project) {
         this.hytaleDir = project.getObjects().directoryProperty();
         this.modsDir = project.getObjects().directoryProperty();
@@ -23,6 +23,8 @@ public class HytalePluginExtension {
         // Set defaults
         hytaleDir.set(project.getLayout().getBuildDirectory()
             .dir("hytale"));
+
+        this.serverJar = project.files(hytaleDir.file("HytaleServer.jar"));
 
         modsDir.set(project.file("run/mods"));
         runDir.set(project.file("run"));
@@ -43,5 +45,9 @@ public class HytalePluginExtension {
     
     public Property<String> getDownloaderUrl() {
         return downloaderUrl;
+    }
+
+    public FileCollection server() {
+        return serverJar;
     }
 }
