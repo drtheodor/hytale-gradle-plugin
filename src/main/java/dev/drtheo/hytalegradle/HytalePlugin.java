@@ -15,7 +15,6 @@ public class HytalePlugin implements Plugin<Project> {
         
         registerTasks(project, extension);
         configureDependencies(project);
-        configureCompileDependencies(project);
     }
     
     private void registerTasks(Project project, HytalePluginExtension extension) {
@@ -26,7 +25,7 @@ public class HytalePlugin implements Plugin<Project> {
             task.getHytaleDir().set(extension.getHytaleDir());
             task.getProjectDir().set(project.getProjectDir());
             task.getBuildDir().set(project.getLayout().getBuildDirectory());
-            task.getDownloaderUrl().set(extension.getDownloaderUrl()); // Fixed
+            task.getDownloaderUrl().set(extension.getDownloaderUrl());
         });
         
         // Missing PrepareHytaleBuildTask implementation
@@ -48,15 +47,9 @@ public class HytalePlugin implements Plugin<Project> {
     
     private void configureDependencies(Project project) {
         project.getDependencies().getExtensions().getExtraProperties()
-            .set("hytale", new HytaleDependency(project));
+            .set("hytaleServer", new HytaleDependency(project));
     }
-    
-    private void configureCompileDependencies(Project project) {
-        project.getTasks().named("compileJava", task -> {
-            task.dependsOn("setupHytaleServer");
-        });
-    }
-    
+
     private static class HytaleDependency {
         private final Project project;
         
