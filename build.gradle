@@ -29,6 +29,7 @@ gradlePlugin {
 publishing {
     publications {
         create("mavenJava", MavenPublication) {
+            artifactId = "hytalegradle"
             from components.java
         }
     }
