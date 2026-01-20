@@ -32,6 +32,7 @@ public abstract class RunHytaleServerTask extends DefaultTask {
                 "--assets", assetsZip.getAbsolutePath(), 
                 "--disable-sentry"
             );
+            spec.setStandardInput(System.in);
         });
     }
 }
